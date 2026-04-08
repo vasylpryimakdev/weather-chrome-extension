@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Box, Grid, InputBase, IconButton, Paper } from "@material-ui/core";
-import { Add as AddIcon } from "@material-ui/icons";
+import {
+  Add as AddIcon,
+  PictureInPicture as PictureInPictureIcon,
+} from "@material-ui/icons";
 import "./popup.css";
 import WeatherCard from "../components/WeatherCard";
 import {
+  setStoredCities,
+  setStoredOptions,
   getStoredCities,
   getStoredOptions,
   LocalStorageOptions,
-  setStoredCities,
-  setStoredOptions,
 } from "../utils/storage";
+import { Messages } from "../utils/messages";
 
 const App: React.FC<{}> = () => {
-  const [cities, setCities] = useState<string[]>(["Toronto"]);
+  const [cities, setCities] = useState<string[]>([]);
   const [cityInput, setCityInput] = useState<string>("");
   const [options, setOptions] = useState<LocalStorageOptions | null>(null);
 
@@ -21,6 +25,10 @@ const App: React.FC<{}> = () => {
     getStoredCities().then((cities) => setCities(cities));
     getStoredOptions().then((options) => setOptions(options));
   }, []);
+
+  if (!options) {
+    return null;
+  }
 
   const handleCityButtonClick = () => {
     if (cityInput === "") {
@@ -41,10 +49,6 @@ const App: React.FC<{}> = () => {
     });
   };
 
-  if (!options) {
-    return null;
-  }
-
   const handleTempScaleButtonClick = () => {
     const updateOptions: LocalStorageOptions = {
       ...options,
@@ -53,6 +57,34 @@ const App: React.FC<{}> = () => {
     setStoredOptions(updateOptions).then(() => {
       setOptions(updateOptions);
     });
+  };
+
+  const handleOverlayButtonClick = () => {
+    chrome.tabs.query(
+      {
+        active: true,
+        currentWindow: true,
+      },
+      (tabs) => {
+        if (tabs.length > 0 && tabs[0].id) {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            Messages.TOGGLE_OVERLAY,
+            (response) => {
+              if (chrome.runtime.lastError) {
+                console.error(
+                  "Error sending message:",
+                  chrome.runtime.lastError.message,
+                );
+                // Optionally show user feedback about the error
+              } else {
+                console.log("Message sent successfully:", response);
+              }
+            },
+          );
+        }
+      },
+    );
   };
 
   return (
@@ -81,8 +113,17 @@ const App: React.FC<{}> = () => {
             </Box>
           </Paper>
         </Grid>
+        <Grid item>
+          <Paper>
+            <Box py="4px">
+              <IconButton onClick={handleOverlayButtonClick}>
+                <PictureInPictureIcon />
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
       </Grid>
-      {options.homeCity !== "" && (
+      {options.homeCity != "" && (
         <WeatherCard city={options.homeCity} tempScale={options.tempScale} />
       )}
       {cities.map((city, index) => (
