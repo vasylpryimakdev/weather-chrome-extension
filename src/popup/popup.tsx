@@ -9,6 +9,7 @@ import {
   getStoredOptions,
   LocalStorageOptions,
   setStoredCities,
+  setStoredOptions,
 } from "../utils/storage";
 
 const App: React.FC<{}> = () => {
@@ -44,6 +45,16 @@ const App: React.FC<{}> = () => {
     return null;
   }
 
+  const handleTempScaleButtonClick = () => {
+    const updateOptions: LocalStorageOptions = {
+      ...options,
+      tempScale: options.tempScale === "metric" ? "imperial" : "metric",
+    };
+    setStoredOptions(updateOptions).then(() => {
+      setOptions(updateOptions);
+    });
+  };
+
   return (
     <Box mx="8px" my="16px">
       <Grid container justify="space-evenly">
@@ -57,6 +68,15 @@ const App: React.FC<{}> = () => {
               />
               <IconButton onClick={handleCityButtonClick}>
                 <AddIcon />
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Paper>
+            <Box py="4px">
+              <IconButton onClick={handleTempScaleButtonClick}>
+                {options.tempScale === "metric" ? "\u2103" : "\u2109"}
               </IconButton>
             </Box>
           </Paper>
