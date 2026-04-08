@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 import { fetchOpenWeatherData, OpenWeatherData } from "../../utils/api";
 
 const WeatherCardContainer: React.FC<{
   children: React.ReactNode;
-}> = ({ children }) => {
+  onDelete?: () => void;
+}> = ({ children, onDelete }) => {
   return (
     <Box mx={"4px"} my={"16px"}>
       <Card>
         <CardContent>{children}</CardContent>
+        <CardActions>
+          {onDelete && (
+            <Button color="secondary" onClick={onDelete}>
+              <Typography className="weatherCard-body">Delete</Typography>
+            </Button>
+          )}
+        </CardActions>
       </Card>
     </Box>
   );
@@ -32,7 +48,12 @@ const WeatherCard: React.FC<{
   }, [city]);
 
   if (!weatherData) {
-    return <div>Loading...</div>;
+    return (
+      <WeatherCardContainer onDelete={onDelete}>
+        <Typography className="weatherCard-title">{city}</Typography>
+        <Typography className="weatherCard-body">Loading...</Typography>
+      </WeatherCardContainer>
+    );
   }
 
   return (
