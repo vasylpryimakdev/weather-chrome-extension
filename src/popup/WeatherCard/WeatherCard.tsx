@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { fetchOpenWeatherData, OpenWeatherData } from "../../utils/api";
+
+const WeatherCardContainer: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  return (
+    <Box mx={"4px"} my={"16px"}>
+      <Card>
+        <CardContent>{children}</CardContent>
+      </Card>
+    </Box>
+  );
+};
+
+type WeatherCardState = "loading" | "error" | "ready";
 
 const WeatherCard: React.FC<{
   city: string;
-}> = ({ city }) => {
+
+  onDelete?: () => void;
+}> = ({ city, onDelete }) => {
   const [weatherData, setWeatherData] = useState<OpenWeatherData | null>(null);
 
   useEffect(() => {
@@ -12,7 +28,7 @@ const WeatherCard: React.FC<{
       .then((data) => {
         setWeatherData(data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("error"));
   }, [city]);
 
   if (!weatherData) {
@@ -20,7 +36,7 @@ const WeatherCard: React.FC<{
   }
 
   return (
-    <Box>
+    <WeatherCardContainer>
       <Grid container justify="space-around">
         <Grid item>
           <Typography className="weatherCard-title">
@@ -43,7 +59,7 @@ const WeatherCard: React.FC<{
           )}
         </Grid>
       </Grid>
-    </Box>
+    </WeatherCardContainer>
   );
 };
 

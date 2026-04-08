@@ -5,7 +5,7 @@ import WeatherCard from "./WeatherCard";
 
 const App: React.FC<{}> = () => {
   return (
-    <div>
+    <div style={{ width: "400px", height: "400px" }}>
       <WeatherCard city="Toronto" />
     </div>
   );
