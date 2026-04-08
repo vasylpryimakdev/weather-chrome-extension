@@ -31,6 +31,15 @@ const App: React.FC<{}> = () => {
     return null;
   }
 
+  const handleSaveButtonClick = () => {
+    setFormState("saving");
+    setStoredOptions(options).then(() => {
+      setTimeout(() => {
+        setFormState("ready");
+      }, 1000);
+    });
+  };
+
   const handleHomeCityChange = (homeCity: string) => {
     setOptions({
       ...options,
@@ -38,12 +47,10 @@ const App: React.FC<{}> = () => {
     });
   };
 
-  const handleSaveButtonClick = () => {
-    setFormState("saving");
-    setStoredOptions(options).then(() => {
-      setTimeout(() => {
-        setFormState("ready");
-      }, 1000);
+  const handleAutoOverlayChange = (hasAutoOverlay: boolean) => {
+    setOptions({
+      ...options,
+      hasAutoOverlay,
     });
   };
 
@@ -67,7 +74,17 @@ const App: React.FC<{}> = () => {
                 disabled={isFieldsDisabled}
               />
             </Grid>
-
+            <Grid item>
+              <Typography variant="body1">
+                Auto toggle overlay on webpage load
+              </Typography>
+              <Switch
+                color="primary"
+                checked={options.hasAutoOverlay}
+                onChange={(event, checked) => handleAutoOverlayChange(checked)}
+                disabled={isFieldsDisabled}
+              />
+            </Grid>
             <Grid item>
               <Button
                 variant="contained"
