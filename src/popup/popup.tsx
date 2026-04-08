@@ -85,6 +85,7 @@ const App: React.FC<{}> = () => {
       {cities.map((city, index) => (
         <WeatherCard
           city={city}
+          tempScale={options.tempScale}
           key={index}
           onDelete={() => handleCityDeleteButtonClick(index)}
         />
