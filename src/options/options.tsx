@@ -31,15 +31,6 @@ const App: React.FC<{}> = () => {
     return null;
   }
 
-  const handleSaveButtonClick = () => {
-    setFormState("saving");
-    setStoredOptions(options).then(() => {
-      setTimeout(() => {
-        setFormState("ready");
-      }, 1000);
-    });
-  };
-
   const handleHomeCityChange = (homeCity: string) => {
     setOptions({
       ...options,
@@ -51,6 +42,15 @@ const App: React.FC<{}> = () => {
     setOptions({
       ...options,
       hasAutoOverlay,
+    });
+  };
+
+  const handleSaveButtonClick = () => {
+    setFormState("saving");
+    setStoredOptions(options).then(() => {
+      setTimeout(() => {
+        setFormState("ready");
+      }, 1000);
     });
   };
 

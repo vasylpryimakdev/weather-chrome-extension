@@ -76,7 +76,6 @@ const App: React.FC<{}> = () => {
                   "Error sending message:",
                   chrome.runtime.lastError.message,
                 );
-                // Optionally show user feedback about the error
               } else {
                 console.log("Message sent successfully:", response);
               }
