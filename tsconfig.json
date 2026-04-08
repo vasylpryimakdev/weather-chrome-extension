@@ -4,6 +4,9 @@
     "module": "es6",
     "target": "es6",
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "types": ["chrome", "node"],
     "esModuleInterop": true
-  }
+  },
+  "include": ["src", "src/custom.d.ts"]
 }
